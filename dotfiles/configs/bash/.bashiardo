@@ -1,0 +1,37 @@
+#!/bin/bash
+# ~/.bashiardo
+
+# PROMPT
+#PS1="\[${color_red}\]\u\[${color_reset}\]"        # User
+#PS1+=" @ \[${color_yellow}\]\h\[${color_reset}\]" # Host
+#PS1+=" in \[${color_green}\]\w\[${color_reset}\]" # Current working directory
+#PS1+=" \$(git_info)"                              # Git branch
+#PS1+="\n\$ "                                      # Newline + '#' for root otherwise $
+#export PS1
+
+# ---------------------------------------------------------------------------- #
+# HISTORY
+HISTFILE=~/.bash_history
+HISTFILESIZE=10000
+HISTCONTROL='erasedups'
+HISTIGNORE='ls:history:exit'
+PROMPT_COMMAND='history -a'
+
+shopt -s autocd
+shopt -s checkwinsize
+shopt -s histappend
+
+# ---------------------------------------------------------------------------- #
+# INCLUDES
+if [ -e ~/.profile ]; then source ~/.profile; fi
+if [ -e ~/.bashnvm ]; then source ~/.bashnvm; fi
+
+# ---------------------------------------------------------------------------- #
+# ALIAS
+alias clrhistory="rm -f ~/.bash_history"
+alias cfgreload="source ~/.bashrc"
+alias cfgeditor="$EDITOR ~/.bashrc"
+
+# ---------------------------------------------------------------------------- #
+# OhMyPosh
+eval "$(oh-my-posh init bash --config ~/.ohmyposh.json)"

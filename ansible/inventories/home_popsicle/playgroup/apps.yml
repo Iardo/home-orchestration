@@ -1,0 +1,103 @@
+- name: "Utilities Installation"
+  hosts: "{{ hosts_list|default('home_popsicle') }}"
+  gather_facts: true
+  vars:
+    - PATH_TASKS: "../../../tasks"
+  tasks:
+    # Dependencies
+    # ----------------------
+    - ansible.builtin.include_tasks:
+        file: "{{ PATH_TASKS }}/installation/curl.yml"
+
+    - ansible.builtin.include_tasks:
+        file: "{{ PATH_TASKS }}/installation/dconf.yml"
+
+    - ansible.builtin.include_tasks:
+        file: "{{ PATH_TASKS }}/installation/make.yml"
+  
+    - ansible.builtin.include_tasks:
+        file: "{{ PATH_TASKS }}/installation/rsync.yml"
+
+    - ansible.builtin.include_tasks:
+        file: "{{ PATH_TASKS }}/installation/unzip.yml"
+
+    - ansible.builtin.include_tasks:
+        file: "{{ PATH_TASKS }}/installation/wget.yml"
+
+    # Order doesn't matter
+    # ---------------------------------
+    - ansible.builtin.include_tasks:
+        file: "{{ PATH_TASKS }}/installation/bat.yml"
+
+    - ansible.builtin.include_tasks:
+        file: "{{ PATH_TASKS }}/installation/btop.yml"
+
+    - ansible.builtin.include_tasks:
+        file: "{{ PATH_TASKS }}/installation/chrome.yml"
+
+    # - ansible.builtin.include_tasks:
+    #     file: "{{ PATH_TASKS }}/installation/docker.yml"
+
+    - ansible.builtin.include_tasks:
+        file: "{{ PATH_TASKS }}/installation/exa.yml"
+
+    - ansible.builtin.include_tasks:
+        file: "{{ PATH_TASKS }}/installation/fzf.yml"
+
+    # - ansible.builtin.include_tasks:
+    #     file: "{{ PATH_TASKS }}/installation/gitui.yml"
+
+    - ansible.builtin.include_tasks:
+        file: "{{ PATH_TASKS }}/installation/kitty.yml"
+
+    - ansible.builtin.include_tasks:
+        file: "{{ PATH_TASKS }}/installation/lf.yml"
+
+    - ansible.builtin.include_tasks:
+        file: "{{ PATH_TASKS }}/installation/mprocs.yml"
+
+    - ansible.builtin.include_tasks:
+        file: "{{ PATH_TASKS }}/installation/mpv.yml"
+
+    - ansible.builtin.include_tasks:
+        file: "{{ PATH_TASKS }}/installation/neofetch.yml"
+
+    # - ansible.builtin.include_tasks:
+    #     file: "{{ PATH_TASKS }}/installation/ntfs-3g.yml"
+
+    - ansible.builtin.include_tasks:
+        file: "{{ PATH_TASKS }}/installation/nvim.yml"
+
+    - ansible.builtin.include_tasks:
+        file: "{{ PATH_TASKS }}/installation/ohmyposh.yml"
+
+    - ansible.builtin.include_tasks:
+        file: "{{ PATH_TASKS }}/installation/openssh.yml"
+
+    - ansible.builtin.include_tasks:
+        file: "{{ PATH_TASKS }}/installation/quicklook.yml"
+
+    - ansible.builtin.include_tasks:
+        file: "{{ PATH_TASKS }}/installation/ripgrep.yml"
+
+    - ansible.builtin.include_tasks:
+        file: "{{ PATH_TASKS }}/installation/vscode.yml"
+
+    # - ansible.builtin.include_tasks:
+    #     file: "{{ PATH_TASKS }}/installation/wezterm.yml"
+
+    - ansible.builtin.include_tasks:
+        file: "{{ PATH_TASKS }}/installation/xnview.yml"
+
+    - ansible.builtin.include_tasks:
+        file: "{{ PATH_TASKS }}/installation/zoxide.yml"
+
+
+- name: "Applications Installation"
+  hosts: "{{ hosts_list|default('home_popsicle') }}"
+  gather_facts: no
+  vars:
+    - PATH_TASKS: "../../../tasks"
+  tasks:
+    - ansible.builtin.include_tasks:
+        file: "{{ PATH_TASKS }}/installation/evince.yml"

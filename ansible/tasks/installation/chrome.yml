@@ -1,0 +1,68 @@
+- name: "chrome"
+  set_fact:
+    state: present
+
+- name: "is binary present?"
+  vars:
+    subtask: true
+    nameskip: true
+  register: bin_path
+  stat: { path: /opt/google/chrome }
+
+# Debian
+# ------
+- when: |
+    bin_path.stat.exists == false and
+    "present" in state and
+    ansible_facts["os_family"] == "Debian"
+  block:
+    - name: "dependencies"
+      become: yes
+      vars:
+        subtask: true
+        nameskip: false
+      ansible.builtin.shell: |
+        wget http://archive.ubuntu.com/ubuntu/pool/main/libu/libu2f-host/libu2f-udev_1.1.4-1_all.deb && dpkg -i libu2f-udev_1.1.4-1_all.deb
+
+    - name: "download"
+      become: yes
+      vars:
+        subtask: true
+        nameskip: false
+      ansible.builtin.get_url:
+        url: "https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"
+        dest: /opt
+        mode: 0755
+
+    - name: "link app"
+      become: yes
+      vars:
+        subtask: true
+        nameskip: false
+      register: unpacked
+      ansible.builtin.command:
+        cmd: "dpkg -i /opt/google-chrome-stable_current_amd64.deb"
+
+    - name: "cleanup"
+      when: unpacked is defined
+      become: yes
+      vars:
+        subtask: true
+        nameskip: true
+      ansible.builtin.file:
+        path: /opt/google-chrome-stable_current_amd64.deb
+        state: absent
+
+- when: |
+    bin_path.stat.exists == true and
+    'absent' in state and
+    ansible_facts["os_family"] == "Debian"
+  block:
+    - name: "remove app"
+      become: yes
+      vars:
+        subtask: true
+        nameskip: false
+      ansible.builtin.shell: |
+        dpkg --remove google-chrome-stable
+        dpkg --purge google-chrome-stable

@@ -1,0 +1,78 @@
+## MONITORS
+## -------------------------------------------------------------------------- ##
+## Use one of the following RandR commands to get the output value
+##
+##  xrandr --current
+##  xrandr --listmonitors   ## if your X server supports RandR 1.5
+##
+## My default configuration goes like this:
+##
+##  HDMI-0 - Huion Kamvas 16
+##  DP-1   - Samsung M7 4K
+##  DP-2   - Asus ProArt PA278QV
+
+## WORKSPACES
+## -------------------------------------------------------------------------- ##
+set $workspace1 "1: Youtube"
+set $workspace2 "2: Main"
+set $workspace3 "3: Webdev"
+set $workspace4 "4: Social"
+
+workspace $workspace1 output HDMI-0
+workspace $workspace2 output DP-1
+workspace $workspace3 output DP-1
+workspace $workspace4 output DP-2
+
+## Always float certain windows:
+## https://major.io/2019/02/08/automatic-floating-windows-in-i3/
+## -------------------------------------------------------------------------- ##
+## For those windows that you always want to be floating no matter what, 
+## i3 has a solution for that, too. Just tell i3 how to identify your windows
+## and ensure floating enable appears in the i3 config:
+##   
+##   for_window [window_role="About"] floating enable
+##   for_window [class="vlc"] floating enable
+##   for_window [title="Authy"] floating enable
+## 
+
+## Float in a specific workspace:
+## -------------------------------------------------------------------------- ##
+## Let’s consider that we have a really nice 4K display where we always want to 
+## watch movies and that’s where workspace 2 lives. 
+## We can tell i3 to always float the VLC window on workspace 2 with this configuration:
+##
+##   for_window [class="vlc"] floating enable
+##   for_window [class="vlc"] move to workspace $workspace2
+##
+
+## Identifying windows
+## -------------------------------------------------------------------------- ##
+## Knowing when to use window_role or class for a window isn’t very intuitive.
+## Fortunately, there’s a great script from an archived i3 faq thread that makes this easy: 
+##   https://faq.i3wm.org/question/2172/how-do-i-find-the-criteria-for-use-with-i3-config-commands-like-for_window-eg-to-force-splashscreens-and-dialogs-to-show-in-floating-mode.1.html
+## 
+## As soon as you run this script, a plus (+) icon will replace your normal mouse cursor. 
+## Click on the window you care about and look for the output in your terminal 
+## where you ran the i3-get-window-criteria script.
+## 
+## See: ~/.config/regolith2/i3-get-window-criteria.sh
+
+
+## Floating Windows
+## -------------------------------------------------------------------------- ##
+## By Class
+for_window [class="bottles"] floating enable, border normal 2
+for_window [class="Deskreen"] floating enable, border normal 2
+for_window [class="flameshot"] [title="Configuration"] floating enable, border normal 2
+for_window [class="Free Download Manager"] floating enable, border normal 2
+for_window [class="Gnome-system-monitor"] floating enable, border normal 2
+for_window [class="Nemo"] floating enable
+for_window [class="Nvidia-settings"] floating enable, border normal 2
+for_window [class="Org.gnome.Nautilus"] floating enable
+# for_window [class="Org.gnome.Nautilus"] move to workspace $workspace2
+for_window [class="Pavucontrol"] floating enable, border normal 2
+for_window [class="Regolith-control-center"] floating enable
+for_window [class="Rustdesk"] floating enable, border normal 2
+
+## By Title
+for_window [title="Calculator"] floating enable, border normal 2

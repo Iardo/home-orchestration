@@ -1,0 +1,21 @@
+! The default configurations are stored in /usr/share/regolith/i3/config.d.
+! These are loaded alphabetically. 
+! Then user configurations in ~/.config/regolith2/config.d are loaded, also in alphabetical order.
+
+! Theme
+regolith.look.path: /usr/share/regolith-look/gruvbox
+regolith.wallpaper.file: ~/Pictures/Backgrounds/pexels-pixabay-531321.jpg
+regolith.wallpaper.options: zoom
+
+! Fonts
+!gnome.terminal.font: "Iosevka SS02 Medium"
+i3-wm.bar.font: "Iosevka SS02 Medium"
+i3-wm.font: "Iosevka SS02 Medium"
+i3xrocks.value.font: "Iosevka SS02 Medium"
+
+! Gaps
+i3-wm.gaps.inner.size: 0
+i3-wm.gaps.outer.size: 0
+
+! Keybinds
+i3-wm.binding.sleep: Shift+Ctrl+s

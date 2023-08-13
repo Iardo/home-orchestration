@@ -1,0 +1,34 @@
+- name: "gitui"
+  stat:
+    path: /usr/local/bin/gitui
+  register: gitui_binary
+
+- name: "gitui | Prepare installation folder"
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+  - /var/gitui/
+  when: gitui_binary.stat.exists == false
+
+- name: "gitui | Download and Unzip the file"
+  ansible.builtin.unarchive:
+    src: https://api.github.com/repos/extrawurst/gitui/releases/latest
+    dest: /var/gitui/
+    remote_src: yes
+  when: gitui_binary.stat.exists == false
+
+- name: "gitui | Check if the file was uncompressed correctly"
+  stat:
+    path: /var/gitui/gitui
+  register: gitui_uncompressed_binary
+
+- name: "gitui | Move binaries to /usr/local/bin"
+  command: mv /var/gitui/gitui /usr/local/bin
+  when: (gitui_binary.stat.exists == false) and (gitui_uncompressed_binary.stat.exists == true)
+  
+- name: "gitui | Remove temporary folders"
+  ansible.builtin.file:
+    path: /var/gitui
+    state: absent
+  when: gitui_binary.stat.exists == false

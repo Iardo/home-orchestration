@@ -1,0 +1,19 @@
+- name: "Ensure /opt Ownership"
+  register: folder_contents
+  find:
+    file_type: any
+    path: "/opt"
+    recurse: true
+
+- name: "set ownership"
+  become: yes
+  vars:
+    subtask: true
+    excluded_folder_name: ""
+  when: 
+    item.path is not search(excluded_folder_name)
+  loop: "{{ folder_contents.files }}"
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    owner: "{{ user }}"
+    group: "{{ user }}"

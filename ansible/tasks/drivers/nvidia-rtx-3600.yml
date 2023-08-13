@@ -1,0 +1,53 @@
+- name: "NVIDIA RTX 3600"
+  debug: { msg: "" }
+
+# Debian
+# ------
+- when: |
+    ansible_facts["os_family"] == "Debian" and
+    ansible_facts["nodename"] != "pop-os"
+  block:
+  - name: "add repo"
+    become: yes
+    vars:
+      subtask: true
+      nameskip: false
+    ansible.builtin.apt_repository:
+      repo: deb http://deb.debian.org/debian/ sid main contrib non-free non-free-firmware
+      state: present
+
+  - name: "install"
+    become: yes
+    vars:
+      subtask: true
+      nameskip: false
+    ansible.builtin.apt:
+      name:
+        - nvidia-driver
+        - firmware-misc-nonfree
+      state: present
+    
+# POP-OS
+# ------
+- when: ansible_facts['nodename'] == "pop-os"
+  block:
+  - name: "install"
+    become: yes
+    vars:
+      version: 530
+      subtask: true
+      nameskip: false
+    ansible.builtin.command:
+      cmd: |
+        "ubuntu-drivers install nvidia-driver-{{ version }}"
+  
+  - name: ""
+    become: yes
+    vars:
+      version: 530
+      subtask: true
+      nameskip: true
+    ansible.builtin.apt:
+      name: "nvidia-utils-{{ version }}"
+      state: present
+      

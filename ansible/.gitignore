@@ -1,0 +1,12 @@
+# ignore these folders:
+/__pycache__
+
+# ignore these files:
+.DS_Store
+*.py[cod]
+*$py.class
+
+# --------------------
+
+# include these folders:
+# include these files:

@@ -1,0 +1,74 @@
+- name: "wezterm"
+  debug: { msg: "" }
+
+- name: "is binary present?"
+  vars:
+    subtask: true
+    nameskip: true
+  register: bin_path
+  stat: { path: /opt/wezterm }
+
+# Debian
+# ------
+- when: |
+    bin_path.stat.exists == false and
+    "present" in state and
+    ansible_facts["os_family"] == "Debian"
+  block:
+    - name: "dependencies"
+      become: yes
+      vars:
+        subtask: true
+        nameskip: true
+      ansible.builtin.apt:
+        name:
+          - libssl1.1=1.1.0g-2ubuntu-4.3
+        state: present
+
+    - name: "download"
+      become: yes
+      vars:
+        version: "20230408-112425-69ae8472"
+        subtask: true
+        nameskip: false
+      ansible.builtin.get_url:
+        url: "https://github.com/wez/wezterm/releases/download/{{ version }}/wezterm-{{ version }}.Ubuntu20.04.deb"
+        dest: /opt
+        mode: 0755
+
+    - name: "link app"
+      become: yes
+      vars:
+        version: "20230408-112425-69ae8472"
+        subtask: true
+        nameskip: false
+      register: unpacked
+      ansible.builtin.command:
+        cmd: "dpkg -i /opt/wezterm-{{ version }}.Ubuntu20.04.deb"
+
+    - name: "cleanup"
+      when: unpacked is defined
+      become: yes
+      vars:
+        version: "20230408-112425-69ae8472"
+        subtask: true
+        nameskip: true
+      ansible.builtin.file:
+        path: /opt/wezterm-{{ version }}.Ubuntu20.04.deb
+        state: absent
+
+- when: |
+    bin_path.stat.exists == true and
+    'absent' in state and
+    ansible_facts["os_family"] == "Debian"
+  block:
+    - name: "remove app"
+      become: yes
+      vars:
+        subtask: true
+        nameskip: false
+      ansible.builtin.shell: |
+        dpkg --remove google-chrome-stable
+        dpkg --purge google-chrome-stable
+
+  # https://stackoverflow.com/questions/72133316/libssl-so-1-1-cannot-open-shared-object-file-no-such-file-or-directory

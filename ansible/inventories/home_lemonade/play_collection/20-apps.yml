@@ -1,0 +1,14 @@
+# - name: "Install Utilities"
+#   hosts: "{{ hosts_list|default('home_lemonade') }}"
+#   gather_facts: true
+#   vars:
+#     - PATH_TASKS: "../../../tasks"
+#   tasks:
+
+- name: "Install Applications"
+  hosts: "{{ hosts_list|default('home_lemonade') }}"
+  gather_facts: true
+  tasks:
+  - name: ""
+    ansible.windows.win_ping:
+      data: crash

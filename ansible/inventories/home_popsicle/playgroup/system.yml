@@ -1,0 +1,36 @@
+- name: "Drivers Installation"
+  hosts: "{{ hosts_list|default('home_popsicle') }}"
+  gather_facts: true
+  vars:
+    - PATH_TASKS: "../../../tasks"
+  # tasks:
+  #   - ansible.builtin.include_tasks:
+  #       file: "{{ PATH_TASKS }}/drivers/nvidia-rtx-3600.yml"
+
+- name: "System Configuration"
+  hosts: "{{ hosts_list|default('home_popsicle') }}"
+  gather_facts: true
+  vars:
+    - PATH_TASKS: "../../../tasks"
+  tasks:
+    # - ansible.builtin.include_tasks:
+    #     file: "{{ PATH_TASKS }}/system/config-dirs-ownership.yml"
+
+    - ansible.builtin.include_tasks:
+        file: "{{ PATH_TASKS }}/system/config-xdg-folders.yml"
+
+
+# - name: "System Tools"
+#   hosts: "{{ hosts_list|default('home_popsicle') }}"
+#   gather_facts: no
+#   vars:
+#     - PATH_TASKS: "../../../tasks"
+#   tasks:
+#     - ansible.builtin.include_tasks:
+#         file: "{{ PATH_TASKS }}/installation/gnome-wayland.yml"
+
+#     - ansible.builtin.include_tasks:
+#         file: "{{ PATH_TASKS }}/installation/nautilus.yml"
+
+#     - ansible.builtin.include_tasks:
+#         file: "{{ PATH_TASKS }}/installation/rofi.yml"

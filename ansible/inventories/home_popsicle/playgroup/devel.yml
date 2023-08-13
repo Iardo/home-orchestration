@@ -1,0 +1,39 @@
+- name: "Toolchains Installation"
+  hosts: "{{ hosts_list|default('home_popsicle') }}"
+  gather_facts: true
+  vars:
+    - PATH_TASKS: "../../../tasks"
+  tasks:
+    - ansible.builtin.include_tasks:
+        file: "{{ PATH_TASKS }}/installation/android.yml"
+
+    - ansible.builtin.include_tasks:
+        file: "{{ PATH_TASKS }}/installation/d2-lang.yml"
+
+    - ansible.builtin.include_tasks:
+        file: "{{ PATH_TASKS }}/installation/elixir.yml"
+
+    - ansible.builtin.include_tasks:
+        file: "{{ PATH_TASKS }}/installation/jai.yml"
+
+    - ansible.builtin.include_tasks:
+        file: "{{ PATH_TASKS }}/installation/java.yml"
+
+    - ansible.builtin.include_tasks:
+        file: "{{ PATH_TASKS }}/installation/ctoolchain.yml"
+
+    - ansible.builtin.include_tasks:
+        file: "{{ PATH_TASKS }}/installation/nodejs.yml"
+
+    - ansible.builtin.include_tasks:
+        file: "{{ PATH_TASKS }}/installation/ocaml.yml"
+
+    - ansible.builtin.include_tasks:
+        file: "{{ PATH_TASKS }}/installation/odin.yml"
+
+    #- ansible.builtin.include_tasks:
+    #file: "{{ PATH_TASKS }}/installation/php.yml"
+  
+    - ansible.builtin.include_tasks:
+        file: "{{ PATH_TASKS }}/installation/rust.yml"
+  

@@ -1,0 +1,2 @@
+- name: "obsidian"
+  debug: { msg: "" }

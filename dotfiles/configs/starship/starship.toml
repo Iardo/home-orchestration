@@ -1,0 +1,432 @@
+# Uaihu Startship
+
+# Don't print a new line at the start of the prompt
+add_newline = false
+
+
+# ------------------------------------------------- #
+# Order of modules on prompt
+format = """$username\
+        $hostname\
+        $directory\
+        $aws\
+        $gcloud\
+        $singularity\
+        $kubernetes\
+        $docker_context\
+        (↓ Source control - for right side ↓)\
+        $hg_branch\
+        $git_branch\
+        $git_commit\
+        $git_status\
+        $git_state\
+        (↑ Source control - for right side ↑)\
+        (↓ Shell ↓)\
+        $shell\
+        (↑ Shell ↑)\
+        (↓ Toolchain version modules ↓)\
+        $dart\
+        $dotnet\
+        $elixir\
+        $elm\
+        $erlang\
+        $golang\
+        $haskell\
+        $lua\
+        $nim\
+        $nodejs\
+        $php\
+        $python\
+        $ruby\
+        $rust\
+        $swift\
+        $terraform\
+        $zig\
+        (↑ Toolchain version modules ↑)\
+        (↓ Package modules ↓)\
+        $helm\
+        $package\
+        $cmake\
+        $conda\
+        (↑ Package modules ↑)\
+        $nix_shell\
+        $memory_usage\
+        $env_var\
+        $custom\
+        (↑ above input line ↑)\
+        $line_break\
+        (↓ on input line ↓)\
+        $battery\
+        $shlvl\
+        $jobs\
+        $cmd_duration\
+        $status\
+        $character\
+    """
+
+
+# ------------------------------------------------- #
+# Generic prompt configurations
+[character]
+success_symbol = "[[](bg:#AFD700 fg:#464347)](fg:#AFD700)"
+error_symbol = "[[](bg:#ff3322 fg:#464347)](fg:#ff3322)"
+vicmd_symbol = "[[](bg:#6f6a70 fg:#464347)[](bg:#464347 fg:#6f6a70)](bold bg:#6f6a70 fg:#ff3322)"
+format = "$symbol "
+
+[line_break]
+disabled = true
+
+
+# ------------------------------------------------- #
+# System modules configurations
+[username]
+disabled = false
+show_always = true
+format = "[[](bg:#3388FF fg:#3388FF)$user [](bg:#464347 fg:#3388FF)]($style)"
+style_root = "bold bg:#3388FF fg:#FF5511"
+style_user = "bg:#3388FF fg:#EEEEEE"
+
+[hostname]
+disabled = true
+format = "[[](bg:#AFD700 fg:#464347)($style)$hostname[](bg:#464347 fg:#AFD700)]($style)"
+style = "bg:#AFD700 fg:#111111"
+ssh_only = false
+trim_at = "."
+
+[status]
+disabled = false
+format = "[$symbol$status]($style)"
+style = "bg:#464347 fg:#ff3322"
+symbol = ""
+
+[time]
+disabled = false
+### color is set to orange, because of the configured time_range--to get your attention for e. g. R&R time ;)
+format = "[[](bg:#FFA200 fg:#464347)$time[](bg:#464347 fg:#FFA200)]($style)"
+style = "bg:#FFA200 fg:#111111"
+time_format = "%H:%M"
+time_range = "20:00:00-06:00:00"
+use_12hr = true
+utc_time_offset = "local"
+
+[jobs]
+disabled = true
+format = "[$symbol$number]($style)"
+symbol = "  "
+style = "bold bg:#464347 fg:#FFA200"
+# threshold = 1
+
+[battery]
+disabled = true
+format = "[[](bg:#FF5511 fg:#464347)$symbol$percentage[](bg:#464347 fg:#FF5511)]($style)"
+charging_symbol = " "
+discharging_symbol = " "
+empty_symbol = ""
+full_symbol = ""
+unknown_symbol = ""
+
+[[battery.display]]
+threshold = 10
+style = "bold bg:#FF5511 fg:#EEEEEE"
+
+[[battery.display]]
+threshold = 20
+style = "bg:#FF5511 fg:#111111"
+
+[memory_usage]
+disabled = true
+format = "([[](bg:#BBBBBB fg:#464347)$symbol$ram(:$swap)[](bg:#464347 fg:#BBBBBB)]($style))"
+symbol = " "
+style = "bg:#BBBBBB fg:#111111"
+threshold = 75
+
+[package]
+disabled = false
+format = "[[](bg:#6F6A70 fg:#464347)$symbol$version[](bg:#464347 fg:#6F6A70)]($style)"
+symbol = "pkg-"
+style = "bg:#6F6A70 fg:#EEEEEE"
+display_private = false
+
+[directory]
+format = "([[](bg:#EF5350 fg:#464347)$read_only[](bg:#464347 fg:#EF5350)]($read_only_style))[[](bg:#6F6A70 fg:#464347)$path[](bg:#464347 fg:#6F6A70)]($style)"
+read_only = ""
+read_only_style = "bg:#EF5350 fg:#EEEEEE"
+style = "italic bg:#6F6A70 fg:#EEEEEE"
+truncate_to_repo = true
+truncation_length = 4
+# truncation_symbol = "…"
+# fish_style_pwd_dir_length = 3
+
+[directory.substitutions]
+"~" = "~ "
+"/" = "  "
+
+[cmd_duration]
+disabled = false
+format = "[$duration]($style)"
+style = "bg:#464347 fg:#FBDE2D"
+min_time = 1_000
+min_time_to_notify = 45_000
+show_milliseconds = true
+show_notifications = false
+
+[env_var]
+disabled = true
+format = "([[](bg:#6f6a70 fg:#464347)$symbol$env_value[](bg:#464347 fg:#6f6a70)]($style))"
+symbol = " "
+style = "bg:#6f6a70 fg:#EEEEEE"
+default = ""
+variable = "0"
+
+[shell]
+disabled = true
+bash_indicator = "bash"
+fish_indicator = "fish"
+zsh_indicator = "zsh"
+powershell_indicator = "pwsh"
+ion_indicator = "ion"
+elvish_indicator = "elvsh"
+tcsh_indicator = "tcsh"
+xonsh_indicator = "xonsh"
+cmd_indicator = "cmd"
+nu_indicator = "nu"
+unknown_indicator = "shell"
+
+[git_branch]
+disabled = false
+format = "[[](bg:#F57C00 fg:#464347)$symbol$branch[](bg:#464347 fg:#F57C00)]($style)"
+symbol = ""
+style = "bg:#F57C00 fg:#ECEFF1"
+# truncation_length = 4
+# truncation_symbol = ""
+
+[git_commit]
+disabled = false
+format = "[[](bg:#F57C00 fg:#464347)#$hash[](bg:#464347 fg:#F57C00)]($style)"
+style = "bg:#F57C00 fg:#ECEFF1"
+commit_hash_length = 7
+only_detached = false
+tag_disabled = false
+
+[git_state]
+disabled = false
+format = '\([[](bg:#E0B25D fg:#464347)$state($progress_current/$progress_total)[](bg:#464347 fg:#E0B25D)]($style)\)'
+style = "bg:#E0B25D fg:111111"
+am = "am'ing"
+am_or_rebase = "am/rebase"
+bisect = "bisecting"
+cherry_pick = " picking"
+merge = "merging"
+rebase = "rebasing"
+revert = "reverting"
+
+[git_status]
+disabled = true
+style = "bg:#E0B25D fg:#000000"
+stashed = " ${count}"
+ahead = "ﲗ ${count}"
+behind = "ﲔ ${count}"
+diverged = "李 ${ahead_count} ${behind_count}"
+conflicted = "${count}"
+deleted = " ${count}"
+renamed = "﫦${count}"
+modified = " 凜${count}"
+staged = "  ${count}"
+untracked = "  ${count}"
+format = "([[](bg:#E0B25D fg:#464347)$stashed$staged$modified$renamed$untracked$deleted$conflicted$ahead_behind[](bg:#464347 fg:#E0B25D)]($style))"
+
+# Mercurial
+[hg_branch]
+disabled = false
+symbol = " "
+style = "bg:#96ab5f fg:#111111"
+# truncation_length = 8 # default = 2^63 - 1
+# truncation_symbol = "…"
+format = "[[](bg:#96ab5f fg:#464347)$symbol$branch[](bg:#464347 fg:#96ab5f)]($style)"
+
+# ------------------------------------------------- #
+# Module configurations
+[aws]
+disabled = true
+format = '[[](bg:#EC912D fg:#464347)$symbol$profile(\($region\))[](bg:#464347 fg:#EC912D)]($style)'
+symbol = ""
+style = "bg:#EC912D"
+
+[cmake]
+disabled = true
+format = "[[](bg:#43A047 fg:#464347)$symbol$version[](bg:#464347 fg:#43A047)]($style)"
+symbol = "cmake-"
+style = "bg:#43A047 fg:#EEEEEE"
+
+[conda]
+disabled = true
+format = "[[](bg:#43A047 fg:#464347)$symbol$environment[](bg:#464347 fg:#43A047)]($style)"
+symbol = "conda-"
+style = "bg:#43A047 fg:#111111"
+ignore_base = true
+truncation_length = 1
+
+[crystal]
+disabled = true
+format = "[[](bg:#43A047 fg:#464347)$symbol$version[](bg:#464347 fg:#43A047)]($style)"
+symbol = "crystal-"
+style = "bg:#43A047 fg:#111111"
+
+[dart]
+disabled = true
+format = "[[](bg:#43A047 fg:#464347)$symbol$version[](bg:#464347 fg:#43A047)]($style)"
+symbol = "dart-"
+style = "bg:#43A047 fg:#111111"
+
+[docker_context]
+disabled = false
+format = "[[](bg:#3A91DC fg:#464347)$symbol$context[](bg:#464347 fg:#3A91DC)]($style)"
+symbol = "docker-"
+style = "bg:#3A91DC  fg:#EEEEEE"
+only_with_files = true
+
+[dotnet]
+disabled = true
+format = "[[](bg:#43A047 fg:#464347)$symbol$version( 什$tfm)[](bg:#464347 fg:#43A047)]($style)"
+symbol = "dotnet-"
+style = "bg:#43A047 fg:#EEEEEE"
+heuristic = true
+
+[elixir]
+disabled = true
+format = '[[](bg:#43A047 fg:#464347)$symbol$version \(OTP:$otp_version\)[](bg:#464347 fg:#43A047)]($style)'
+symbol = "elixir-"
+style = "bg:#43A047 fg:#EEEEEE"
+
+[elm]
+disabled = true
+format = "[[](bg:#43A047 fg:#464347)$symbol$version[](bg:#464347 fg:#43A047)]($style)"
+symbol = "elm-"
+style = "bg:#43A047 fg:#EEEEEE"
+
+[erlang]
+disabled = true
+format = "[[](bg:#43A047 fg:#464347)$symbol$version[](bg:#464347 fg:#43A047)]($style)"
+symbol = "erlang-"
+style = "bg:#43A047 fg:#EEEEEE"
+
+[gcloud]
+disabled = true
+format = '[[](bg:#1A73E8 fg:#464347)$symbol$account(\($region\))[](bg:#464347 fg:#1A73E8)]($style)'
+symbol = ""
+style = "bg:#1A73E8 fg:#EEEEEE"
+
+[golang]
+disabled = false
+format = "[[](bg:#43A047 fg:#464347)$symbol$version[](bg:#464347 fg:#43A047)]($style)"
+symbol = "go-"
+style = "bg:#43A047 fg:#111111"
+
+[haskell]
+disabled = false
+format = "[[](bg:#43A047 fg:#464347)$symbol$version[](bg:#464347 fg:#43A047)]($style)"
+symbol = "haskell-"
+style = "bg:#43A047 fg:#111111"
+
+[helm]
+disabled = true
+format = "[[](bg:#43A047 fg:#464347)$symbol$version[](bg:#464347 fg:#43A047)]($style)"
+symbol = "helm-"
+style = "bg:#43A047 fg:#EEEEEE"
+
+[kubernetes]
+disabled = false
+format = '[[](bg:#3371E3 fg:#464347)$symbol$context(\($namespace\))[](bg:#464347 fg:#3371E3)]($style)'
+symbol = "kubernetes-"
+style = "bg:#3371E3 fg:#EEEEEE"
+
+[lua]
+disabled = true
+format = "[[](bg:#43A047 fg:#464347)$symbol$version[](bg:#464347 fg:#43A047)]($style)"
+symbol = "lua-"
+style = "bg:#43A047 fg:#111111"
+
+[nim]
+disabled = true
+format = "[[](bg:#43A047 fg:#464347)$symbol$version[](bg:#464347 fg:#43A047)]($style)"
+symbol = "nim-"
+style = "bg:#43A047 fg:#111111"
+
+[nix_shell]
+disabled = true
+format = '[[](bg:#27385D fg:#464347)$symbol$name$state[](bg:#464347 fg:#27385D)]($style)'
+symbol = ""
+style = "bg:#27385D fg:#EEEEEE"
+impure_msg = '[\(impure\)](bg:#27385D fg:#FF5511)'
+pure_msg = '[\(pure\)](bg:#27385D fg:#AFD700)'
+
+[nodejs]
+disabled = false
+format = "[[](bg:#43A047 fg:#464347)$symbol$version[](bg:#464347 fg:#43A047)]($style)"
+symbol = "node-"
+style = "bg:#43A047 fg:#EEEEEE"
+
+[php]
+disabled = false
+format = "[[](bg:#43A047 fg:#464347)$symbol$version[](bg:#464347 fg:#43A047)]($style)"
+symbol = "php-"
+style = "bg:#43A047 fg:#EEEEEE"
+
+[python]
+disabled = true
+format = '[[](bg:#43A047 fg:#464347)$symbol$pyenv_prefix$version(\($virtualenv\))[](bg:#464347 fg:#43A047)]($style)'
+symbol = "python-"
+style = "bg:#43A047 fg:#111111"
+pyenv_version_name = true
+pyenv_prefix = "pyenv "
+python_binary = "python3"
+scan_for_pyfiles = true
+
+[ruby]
+disabled = true
+format = "[[](bg:#43A047 fg:#464347)$symbol$version[](bg:#464347 fg:#43A047)]($style)"
+symbol = "ruby-"
+style = "bg:#43A047 fg:#EEEEEE"
+
+[rust]
+disabled = true
+format = "[[](bg:#43A047 fg:#464347)$symbol$version[](bg:#464347 fg:#43A047)]($style)"
+symbol = "rust-"
+style = "bg:#43A047 fg:#EEEEEE"
+
+[shlvl]
+disabled = false
+format = "[$symbol$shlvl]($style)"
+symbol = ""
+style = "bold bg:#464347 fg:#FBDE2D"
+threshold = 2
+
+[singularity]
+disabled = true
+format = '[[](bg:#1D315F fg:#464347)$symbol\[$env\][](bg:#464347 fg:#1D315F)]($style)'
+symbol = "S"
+style = "bg:#1D315F fg:#EEEEEE"
+
+[swift]
+disabled = true
+format = "[[](bg:#43A047 fg:#464347)$symbol$version[](bg:#464347 fg:#43A047)]($style)"
+symbol = "swift-"
+style = "bg:#43A047 fg:#EEEEEE"
+
+[terraform]
+disabled = true
+format = '[[](bg:#5836CD fg:#464347)$symbol\($workspace\)[](bg:#464347 fg:#5836CD)]($style)'
+### uncomment the following, to see the version
+# format = "[[](bg:#5836CD fg:#464347)$symbol$version($workspace)[](bg:#464347 fg:#5836CD)]($style)"
+symbol = ""
+style = "bg:#5836CD fg:#EEEEEE"
+
+[zig]
+disabled = true
+format = "[[](bg:#43A047 fg:#464347)$symbol$version[](bg:#464347 fg:#43A047)]($style)"
+symbol = "zig-"
+style = "bg:#43A047 fg:#EEEEEE"
+#EOF.
+
+# Special thanks to Mick Hohmann for the Myth Dark base theme configuration.
+# https://github.com/mickimnet/myth-prompt-themes

@@ -1,0 +1,28 @@
+- name: "openssh"
+  debug: { msg: "" }
+
+# Debian
+# ------
+- when: |
+    ansible_facts["os_family"] == "Debian"
+  block:
+  - name: "install"
+    become: yes
+    vars:
+      subtask: true
+      nameskip: true
+    ansible.builtin.apt:
+      name: 
+        - openssh-client
+        - openssh-sftp-server
+        - openssh-server
+      force_apt_get: true
+      state: present
+
+  - name: "service"
+    become: yes
+    vars:
+      subtask: true
+      nameskip: true
+    ansible.builtin.command:
+      cmd: "systemctl enable ssh --now"

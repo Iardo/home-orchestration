@@ -1,0 +1,45 @@
+- name: "php"
+  debug: { msg: "" }
+
+# Debian
+# ------
+- when: |
+    ansible_facts["os_family"] == "Debian"
+  block:
+  - name: "add repo"
+    become: yes
+    vars:
+      subtask: true
+      nameskip: true
+    ansible.builtin.apt_repository:
+      repo: ppa:ondrej/php
+      state: present
+
+  - name: "install"
+    become: yes
+    vars:
+      subtask: true
+      nameskip: true
+    ansible.builtin.apt:
+      name: 
+        - php7.4-cli
+        - php7.4-json
+        - php7.4-common
+        - php7.4-mysql
+        - php7.4-zip
+        - php7.4-gd
+        - php7.4-mbstring
+        - php7.4-curl
+        - php7.4-xml
+        - php7.4-bcmath
+      state: present
+
+  - name: "modules"
+    become: yes
+    vars:
+      subtask: true
+      nameskip: true
+    ansible.builtin.apt:
+      name: php-xdebug
+      force_apt_get: true
+      state: present

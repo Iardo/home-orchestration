@@ -1,0 +1,45 @@
+- name: "Folders (XDG)"
+  set_fact:
+    path_asset: "{{ inventory_dir }}/../../../dotfiles/configs/xdg"
+    path_user: "/home/{{ ansible_user_id }}"
+    path_dest: "/home/{{ ansible_user_id }}/.config/"
+
+# Debian
+# ------
+- when: |
+    ansible_facts["os_family"] == "Debian"
+  block:
+  - name: "update"
+    become: yes
+    vars:
+      subtask: true
+      nameskip: true
+    ansible.builtin.copy:
+      force: true
+      src: "{{ item.src }}" 
+      dest: "{{ item.dest }}"
+      owner: iardo
+      group: iardo
+      mode: 0775
+    loop:
+      - src: "{{ path_asset|realpath }}/user-dirs.conf"
+        dest: "{{ path_dest }}"
+      - src: "{{ path_asset|realpath }}/user-dirs.dirs"
+        dest: "{{ path_dest }}"
+      - src: "{{ path_asset|realpath }}/user-dirs.locale"
+        dest: "{{ path_dest }}"
+
+  - name: "rename"
+    become: yes
+    vars:
+      subtask: true
+      nameskip: true
+    ansible.builtin.shell: |
+      if [ -d "{{ path_user }}/Desktop" ]; then mv {{ path_user }}/Desktop/ {{ path_user }}/desktop/; fi
+      if [ -d "{{ path_user }}/Documents" ]; then mv {{ path_user }}/Documents/ {{ path_user }}/documents/; fi
+      if [ -d "{{ path_user }}/Downloads" ]; then mv {{ path_user }}/Downloads/ {{ path_user }}/downloads/; fi
+      if [ -d "{{ path_user }}/Music" ]; then mv {{ path_user }}/Music/ {{ path_user }}/music/; fi
+      if [ -d "{{ path_user }}/Pictures" ]; then mv {{ path_user }}/Pictures/ {{ path_user }}/pictures/; fi
+      if [ -d "{{ path_user }}/Public" ]; then mv {{ path_user }}/Public/ {{ path_user }}/public/; fi
+      if [ -d "{{ path_user }}/Templates" ]; then mv {{ path_user }}/Templates/ {{ path_user }}/templates/; fi
+      if [ -d "{{ path_user }}/Videos" ]; then mv {{ path_user }}/Videos/ {{ path_user }}/videos/; fi

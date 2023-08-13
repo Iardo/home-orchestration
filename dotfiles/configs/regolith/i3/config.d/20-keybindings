@@ -1,0 +1,20 @@
+## App Launcher
+set_from_resource $i3-wm.binding.launcher.app i3-wm.binding.launcher.app Alt+space
+set_from_resource $i3-wm.program.launcher.app i3-wm.program.launcher.app ilia -p apps
+bindsym $i3-wm.binding.launcher.app exec --no-startup-id $i3-wm.program.launcher.app -t $ilia.stylesheet
+
+## App Swap to Window
+##set_from_resource $i3-wm.binding.launcher.cmd i3-wm.binding.launcher.cmd $mod+Tab
+##set_from_resource $i3-wm.program.launcher.cmd i3-wm.program.launcher.cmd ilia -p terminal
+##bindsym $i3-wm.binding.launcher.cmd exec --no-startup-id $i3-wm.program.launcher.cmd -t $ilia.stylesheet
+
+## Window close focused
+set_from_resource $i3-wm.binding.exit_app i3-wm.binding.exit_app Ctrl+q
+bindsym $i3-wm.binding.exit_app [con_id="__focused__"] kill
+
+## Window close focused --forced
+set_from_resource $i3-wm.binding.kill_app i3-wm.binding.kill_app Ctrl+e
+bindsym $alt+$i3-wm.binding.kill_app [con_id="__focused__"] exec --no-startup-id kill -9 $(xdotool getwindowfocus getwindowpid)
+
+## Screenshot key bind to Flameshot #FIXME: This needs to be moved to the correct file
+##gsettings set org.gnome.settings-daemon.plugins.media-keys screenshot 'flameshot gui'

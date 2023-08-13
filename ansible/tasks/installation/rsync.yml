@@ -1,0 +1,17 @@
+- name: "rsync"
+  debug: { msg: "" }
+
+# Debian
+# ------
+- when: |
+    ansible_facts["os_family"] == "Debian"
+  block:
+  - name: "install"
+    become: yes
+    vars:
+      subtask: true
+      nameskip: true
+    ansible.builtin.apt:
+      name: rsync
+      state: present
+    

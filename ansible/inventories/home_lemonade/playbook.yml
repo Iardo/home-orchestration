@@ -1,0 +1,5 @@
+---
+# - import_playbook: play_collection/00-system.yml
+# - import_playbook: play_collection/10-user-env.yml
+- import_playbook: play_collection/20-apps.yml
+# - import_playbook: play_collection/30-devel.yml

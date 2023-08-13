@@ -1,0 +1,5 @@
+- name: "User Configuration"
+  hosts: "{{ hosts_list|default('home_popsicle') }}"
+  gather_facts: false
+  vars:
+    - PATH_TASKS: "../../../tasks"

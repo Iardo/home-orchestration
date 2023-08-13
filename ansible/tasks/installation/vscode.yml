@@ -1,0 +1,63 @@
+- name: "vscode"
+  debug: { msg: "" }
+
+- name: "is binary present?"
+  vars:
+    subtask: true
+    nameskip: true
+  register: bin_path
+  stat: { path: /usr/bin/code }
+
+# Debian
+# ------
+- when: |
+    bin_path.stat.exists == false and
+    "present" in state and
+    ansible_facts["os_family"] == "Debian"
+  block:
+    - name: "download"
+      become: yes
+      vars:
+        version: "1.80.0"
+        subtask: true
+        nameskip: false
+      ansible.builtin.get_url:
+        url: "https://update.code.visualstudio.com/{{ version }}/linux-deb-x64/stable"
+        dest: "/opt/code-{{ version }}.deb"
+        mode: 0755
+
+    - name: "link app"
+      become: yes
+      vars:
+        version: "1.80.0"
+        subtask: true
+        nameskip: false
+      register: unpacked
+      ansible.builtin.command:
+        cmd: "dpkg -i /opt/code-{{ version }}.deb"
+
+    - name: "cleanup"
+      when: unpacked is defined
+      become: yes
+      vars:
+        version: "1.80.0"
+        subtask: true
+        nameskip: true
+      ansible.builtin.file:
+        path: "/opt/code-{{ version }}.deb"
+        state: absent
+
+- when: |
+    bin_path.stat.exists == true and
+    'absent' in state and
+    ansible_facts["os_family"] == "Debian"
+  block:
+    - name: "remove app"
+      become: yes
+      vars:
+        subtask: true
+        nameskip: false
+      ansible.builtin.shell: |
+        dpkg --remove code
+        dpkg --purge code
+

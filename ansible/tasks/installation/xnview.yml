@@ -1,0 +1,91 @@
+- name: "xnview"
+  set_fact:
+    state: present
+
+- name: "is binary present?"
+  vars:
+    subtask: true
+    nameskip: true
+  register: bin_path
+  stat: { path: /opt/xnview }
+
+# Debian
+# ------
+- when: |
+    bin_path.stat.exists == false and
+    "present" in state and
+    ansible_facts["os_family"] == "Debian"
+  block:
+    - name: "dependencies"
+      become: yes
+      vars:
+        subtask: true
+        nameskip: false
+      ansible.builtin.apt:
+        name: libxcb-xinerama0
+        state: present
+        
+    - name: "download"
+      become: yes
+      vars:
+        subtask: true
+        nameskip: false
+      ansible.builtin.unarchive:
+        creates: /opt/xnview/XnView
+        src: "https://download.xnview.com/XnViewMP-linux-x64.tgz"
+        dest: /opt
+        remote_src: yes
+
+    - name: "move app"
+      become: yes
+      vars:
+        subtask: true
+        nameskip: true
+      ansible.builtin.command:
+        cmd: "mv /opt/XnView /opt/xnview"
+
+    - name: "link app"
+      become: yes
+      vars:
+        subtask: true
+        nameskip: false
+      ansible.builtin.file:
+        state: link
+        src: /opt/xnview/xnview.sh
+        dest: "/home/{{ ansible_user_id }}/.local/bin/xnview"
+        mode: 0775
+
+    - name: "link desktop"
+      become: yes
+      vars:
+        subtask: true
+        nameskip: false
+      ansible.builtin.file:
+        state: link
+        src: /opt/xnview/XnView.desktop
+        dest: "/home/{{ ansible_user_id }}/.local/share/applications/xnview.desktop"
+        mode: 0775
+
+    - name: "edit desktop"
+      become: yes
+      vars:
+        subtask: true
+        nameskip: false
+      ansible.builtin.shell: |
+        sed -i "s|Name=XnView Multi Platform|Name=xnview|g" "/home/{{ ansible_user_id }}/.local/share/applications/xnview.desktop"
+        sed -i "s|GenericName=XnViewMP|GenericName=xnviewmp|g" "/home/{{ ansible_user_id }}/.local/share/applications/xnview.desktop"
+        sed -i "s|XnView|xnview|g" "/home/{{ ansible_user_id }}/.local/share/applications/xnview.desktop"
+
+- when: |
+    bin_path.stat.exists == true and
+    'absent' in state and
+    ansible_facts["os_family"] == "Debian"
+  block:
+    - name: "remove"
+      become: yes
+      vars:
+        subtask: true
+        nameskip: false
+      ansible.builtin.command:
+        cmd: rm -rf "/home/{{ ansible_user_id }}/.local/bin/xnview" {{ bin_path.stat.path }}
+        warn: false

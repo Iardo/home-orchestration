@@ -1,0 +1,2 @@
+- name: "obs"
+  debug: { msg: "" }

@@ -1,0 +1,20 @@
+- name: "ntfs-3g"
+  debug: { msg: "" }
+
+# Debian
+# ------
+- when: |
+    ansible_facts["os_family"] == "Debian" and
+    ansible_facts["nodename"] != "pop-os"
+  block:
+  - name: "install"
+    become: yes
+    vars:
+      subtask: true
+      nameskip: true
+    ansible.builtin.apt:
+      name:
+        - ntfs-3g
+        - fuse
+      force_apt_get: true
+      state: present

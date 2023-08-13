@@ -1,0 +1,60 @@
+- name: "d2-lang"
+  set_fact:
+    state: present
+
+- name: "is binary present?"
+  vars:
+    subtask: true
+    nameskip: true
+  register: bin_path
+  stat: { path: "/home/{{ ansible_user_id }}/.local/bin/d2" }
+
+# Debian
+# ------
+- when: |
+    bin_path.stat.exists == false and
+    "present" in state and
+    ansible_facts["os_family"] == "Debian"
+  block:
+    - name: "download"
+      become: yes
+      vars:
+        subtask: true
+        nameskip: false
+      ansible.builtin.get_url:
+        url: https://d2lang.com/install.sh
+        dest: /opt
+        mode: 0755
+
+    # This step requires `make` installed on the machine
+    - name: "link app"
+      vars:
+        subtask: true
+        nameskip: false
+      register: unpacked
+      ansible.builtin.command:
+        creates: bin_path.stat.path
+        cmd: /opt/install.sh
+      
+    - name: "cleanup"
+      when: unpacked is defined
+      become: yes
+      vars:
+        subtask: true
+        nameskip: false
+      ansible.builtin.file:
+        path: /opt/install.sh
+        state: absent
+
+- when: |
+    bin_path.stat.exists == true and
+    'absent' in state and
+    ansible_facts["os_family"] == "Debian"
+  block:
+    - name: "remove app"
+      vars:
+        subtask: true
+        nameskip: false
+      ansible.builtin.command:
+        cmd: rm -rf {{ bin_path.stat.path }}
+        warn: false

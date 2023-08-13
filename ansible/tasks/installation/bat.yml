@@ -1,0 +1,19 @@
+- name: "bat"
+  debug: { msg: "" }
+
+# Debian
+# ------
+- when: |
+    ansible_facts["os_family"] == "Debian"
+  block:
+  # If you install bat this way, please note that
+  # the executable may be installed as batcat instead of bat
+  # (due to a name clash with another package).
+  - name: "install"
+    become: yes
+    vars:
+      subtask: true
+      nameskip: true
+    ansible.builtin.apt:
+      name: bat
+      state: present

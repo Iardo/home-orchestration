@@ -1,0 +1,63 @@
+config:
+  bash:
+    macos: "~/"
+    linux: "~/"
+  clink:
+    windows: "~\\AppData\\Local\\clink"
+  emacs:
+    macos: "~/"
+    linux: "~/"
+    windows: "~\\AppData\\Roaming\\.emacs.d"
+  git:
+    macos: "~/"
+    linux: "~/"
+    windows: "~\\"
+  iterm:
+    macos: "~/"
+  mycli:
+    macos: "~/"
+    linux: "~/"
+  neovim:
+    macos: "~/"
+    linux: "~/"
+    windows: "~\\"
+  oh-my-posh:
+    macos: "~/"
+    linux: "~/"
+    windows: "~\\"
+  php:
+    macos: ""
+    linux: ""
+    windows: ""
+  phpstorm:
+    macos: ""
+    linux: ""
+    windows: ""
+  powershell:
+    macos: ""
+    linux: ""
+    windows: ""
+  powershell:
+    macos: ""
+    linux: ""
+    windows:
+      5.x: "~\\Documents\\WindowsPowerShell",
+      7.x: "~\\Documents\\PowerShell"
+  readline:
+    linux: "~/"
+  regolith:
+    linux:
+      2.x: "~/.config/regolith2"
+  ssh:
+    macos: "~/"
+    linux: "~/"
+    windows: "~\\"
+  starship:
+    macos: ""
+    linux: ""
+    windows: "~\\.config\\starship"
+  windows_terminal:
+    windows: "~\\AppData\\Local\\Packages\\Microsoft.WindowsTerminal_8wekyb3d8bbwe\\LocalState"
+  zsh:
+    macos: "~/"
+    linux: "~/"

@@ -1,0 +1,63 @@
+- name: "odin"
+  set_fact:
+    state: present
+
+- name: "is binary present?"
+  vars:
+    subtask: true
+    nameskip: true
+  register: bin_path
+  stat: { path: /opt/odin-lang }
+
+# Debian
+# ------
+- when: |
+    bin_path.stat.exists == false and
+    "present" in state and
+    ansible_facts["os_family"] == "Debian"
+  block:
+    - name: "mkdir"
+      become: yes
+      vars:
+        subtask: true
+        nameskip: true
+      ansible.builtin.file:
+        path: /opt/odin-lang
+        state: directory
+
+    - name: "download"
+      become: yes
+      vars:
+        version: 2023-05
+        subtask: true
+        nameskip: false
+      ansible.builtin.unarchive:
+        creates: /opt/odin-lang/odin
+        src: "https://github.com/odin-lang/Odin/releases/download/dev-{{ version }}/odin-ubuntu-amd64-dev-{{ version }}.zip"
+        dest: /opt/odin-lang
+        remote_src: yes
+
+    - name: "link app"
+      become: yes
+      vars:
+        subtask: true
+        nameskip: false
+      ansible.builtin.file:
+        state: link
+        src: /opt/odin-lang/odin
+        dest: "/home/{{ ansible_user_id }}/.local/bin/odin"
+        mode: 0775
+      
+- when: |
+    bin_path.stat.exists == true and
+    'absent' in state and
+    ansible_facts["os_family"] == "Debian"
+  block:
+    - name: "remove app"
+      become: yes
+      vars:
+        subtask: true
+        nameskip: false
+      ansible.builtin.command:
+        cmd: rm -rf "/home/{{ ansible_user_id }}/.local/bin/odin" {{ bin_path.stat.path }}
+        warn: false
